@@ -11,16 +11,6 @@ void setup() {
   Serial.begin(9600);
 }
 
-
-/*
- * 
- * ~~~~~~~~~~~~~~
- * DECLARING PINS
- * ~~~~~~~~~~~~~~
- * 
- */
-
-
 //H-Bridge Control Pins
   int IN1 = 7;
   int IN2 = 8;
@@ -40,17 +30,6 @@ void setup() {
 //Ultra-Sonic Sensor #2 Control
   int ECHO2 = 8;
   int TRIG2 = 7;
-
-
-
-
-/*
- * 
- * ~~~~~~~~~~~~~~
- * MAIN LOOP
- * ~~~~~~~~~~~~~~
- * 
- */
  
 void loop() {
   //Setting Pin-Modes
@@ -70,8 +49,6 @@ void loop() {
   pinMode(AONE, INPUT);
   pinMode(ATWO, INPUT);
 
-  //Initial Delay
-
   //Inital Robot Motor Movement.
   digitalWrite(IN1, HIGH);
   digitalWrite(IN4, HIGH);
@@ -81,6 +58,7 @@ void loop() {
   analogWrite(ENA, 0);
   analogWrite(ENB, 0); 
   
+  //Initial Delay
   delay(5000);
   
   //GET DISTANCE
@@ -90,10 +68,8 @@ void loop() {
     int Anal1 = analogRead(AO);
     int Anal2 = analogRead(AONE);
     int Anal3 = analogRead(ATWO);
-
-
       
-      //Checks If The Car Is Inside The Track
+    //Checks If The Car Is Inside The Track
     float OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
 
     if(OutsideBoundary){
@@ -112,11 +88,7 @@ void loop() {
 
 
 /*
- * 
- * ~~~~~~~~~~~~~~~~~~~~~~
- * RETURNS DISTANCE IN CM
- * ~~~~~~~~~~~~~~~~~~~~~~
- * 
+ * Returns Ultra Sonic Sensor reading in CM
  */
 
 float getDistance(int ECHO, int TRIG){
@@ -142,11 +114,7 @@ float getDistance(int ECHO, int TRIG){
 
 
 /*
- * 
- * ~~~~~~~~~~~~~~~~~~~~~~
- * CONTROL MOTOR SPEED
- * ~~~~~~~~~~~~~~~~~~~~~~
- * 
+ * CONTROLS MOTOR SPEED
  */
 
 int setMotorSpeed(float distance){
@@ -169,11 +137,7 @@ int setMotorSpeed(float distance){
 
 
 /*
- * 
- * ~~~~~~~~~~~~~~~~~~~~~~
- * CONTROL IR SENSOR
- * ~~~~~~~~~~~~~~~~~~~~~~
- * 
+ * CONTROLS IR SENSOR
  */
 
 float InsideBoundaryLine(int Anal1,int Anal2,int Anal3){  
