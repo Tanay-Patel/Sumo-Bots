@@ -7,7 +7,6 @@
  */
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
 }
 
@@ -61,7 +60,8 @@ void loop() {
   //Initial Delay
   delay(5000);
   
-  //GET DISTANCE
+  
+  
   while(true){
     float distance1 = getDistance(ECHO1, TRIG1);
     int speed1 = setMotorSpeed(distance1);
@@ -73,7 +73,7 @@ void loop() {
     float OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
 
     if(OutsideBoundary){
-        Execute5HeadManouver();
+        ExecuteReversing();
     }
 
     analogWrite(ENA, speed1);
@@ -87,10 +87,7 @@ void loop() {
 
 
 
-/*
- * Returns Ultra Sonic Sensor reading in CM
- */
-
+//Returns Ultra Sonic Sensor reading in CM
 float getDistance(int ECHO, int TRIG){
   
   pinMode(ECHO, INPUT);
@@ -113,10 +110,7 @@ float getDistance(int ECHO, int TRIG){
 
 
 
-/*
- * CONTROLS MOTOR SPEED
- */
-
+//Controls Motor Speeds
 int setMotorSpeed(float distance){
   int spd = 0;
   
@@ -136,10 +130,7 @@ int setMotorSpeed(float distance){
 }
 
 
-/*
- * CONTROLS IR SENSOR
- */
-
+//Checks IR Sensor
 float InsideBoundaryLine(int Anal1,int Anal2,int Anal3){  
   bool Inside = false;
   if((Anal1 < 760) or (Anal2 < 760) or (Anal3 < 760)){
@@ -149,7 +140,9 @@ float InsideBoundaryLine(int Anal1,int Anal2,int Anal3){
 }
 
 
-void Execute5HeadManouver(){
+
+//Reverseing Manouver
+void ExecuteReversing(){
   digitalWrite(IN1, LOW);
   digitalWrite(IN4, LOW);
   digitalWrite(IN3, HIGH);
