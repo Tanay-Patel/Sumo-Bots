@@ -78,12 +78,12 @@ void loop() {
     //Checks If The Bot Is Inside The Track or lifted up.
     bool OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
     if(OutsideBoundary){
-        ExecuteReversing();
+        //ExecuteReversing();
     }
 
 
     //Checks if bot sees enemy bot.
-    if((distance1 < 75) or (distance2 < 75)){
+    if((distance1 < 15) or (distance2 < 15)){
       analogWrite(ENA, speed1);
       analogWrite(ENB, speed2);
     }
@@ -92,7 +92,7 @@ void loop() {
       analogWrite(ENB,175);
     }
     
-    delay(30);
+    delay(15);
   }  
   
 }
@@ -127,17 +127,11 @@ float getDistance(int ECHO, int TRIG){
 int setMotorSpeed(float distance){
   int spd = 0;
   
-  if(distance < 75){
+  if(distance < 15){
     spd = 255;
     }
-  //else if(distance < 40){
-    //spd = 200;
-    //}
- //else if(distance < 75){
-    //spd = 170;
-    //}
   else{
-    spd = 90;
+    spd = 150;
     }
   return spd;
 }
@@ -164,7 +158,7 @@ void ExecuteReversing(){
   delay(10);
 
   analogWrite(ENA, 255);
-  analogWrite(ENB, 90);
+  analogWrite(ENB, 120);
 
   delay(750);
 
