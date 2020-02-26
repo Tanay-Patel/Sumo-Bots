@@ -29,6 +29,8 @@ void setup() {
 //Ultra-Sonic Sensor #2 Control
   int ECHO2 = 8;
   int TRIG2 = 7;
+
+  int IRLIMITS = 760;
  
 void loop() {
   //Setting Pin-Modes
@@ -64,22 +66,33 @@ void loop() {
   
   while(true){
     float distance1 = getDistance(ECHO1, TRIG1);
+    float distance2 = getDistance(ECHO2, TRIG2);
     int speed1 = setMotorSpeed(distance1);
+    int speed2 = setMotorSpeed(distance2);
+
+    //IR Sensors Input
     int Anal1 = analogRead(AO);
     int Anal2 = analogRead(AONE);
     int Anal3 = analogRead(ATWO);
       
-    //Checks If The Car Is Inside The Track
-    float OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
-
+    //Checks If The Bot Is Inside The Track or lifted up.
+    bool OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
     if(OutsideBoundary){
         ExecuteReversing();
     }
 
-    analogWrite(ENA, speed1);
 
+    //Checks if bot sees enemy bot.
+    if((distance1 < 75) or (distance2 < 75)){
+      analogWrite(ENA, speed1);
+      analogWrite(ENB, speed2);
+    }
+    else{
+      analogWrite(ENA,255);
+      analogWrite(ENB,175);
+    }
     
-    delay(50);
+    delay(30);
   }  
   
 }
@@ -114,15 +127,15 @@ float getDistance(int ECHO, int TRIG){
 int setMotorSpeed(float distance){
   int spd = 0;
   
-  if(distance < 20){
+  if(distance < 75){
     spd = 255;
     }
-  else if(distance < 40){
-    spd = 200;
-    }
-  else if(distance < 75){
-    spd = 170;
-    }
+  //else if(distance < 40){
+    //spd = 200;
+    //}
+ //else if(distance < 75){
+    //spd = 170;
+    //}
   else{
     spd = 90;
     }
@@ -133,7 +146,7 @@ int setMotorSpeed(float distance){
 //Checks IR Sensor
 float InsideBoundaryLine(int Anal1,int Anal2,int Anal3){  
   bool Inside = false;
-  if((Anal1 < 760) or (Anal2 < 760) or (Anal3 < 760)){
+  if((Anal1 < IRLIMITS) or (Anal2 < IRLIMITS) or (Anal3 < IRLIMITS)){
      Inside = true;
   }
   return Inside;
@@ -151,12 +164,12 @@ void ExecuteReversing(){
   delay(10);
 
   analogWrite(ENA, 255);
-  analogWrite(ENB, 120);
+  analogWrite(ENB, 90);
 
-  delay(10);
+  delay(750);
 
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN4, LOW);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN2, HIGH);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN4, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN2, LOW);
 }
