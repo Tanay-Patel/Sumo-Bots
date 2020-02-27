@@ -73,7 +73,7 @@ void loop() {
     Anal2 = analogRead(AONE);
     Anal3 = analogRead(ATWO);
 
-    Serial.println(Anal1);
+    Serial.println(distance1);
       
     //Checks If The Bot Is Inside The Track or lifted up.
     bool OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
@@ -86,7 +86,7 @@ void loop() {
     analogWrite(ENA, speed1);
     analogWrite(ENB, speed1);
     
-    delay(15);
+    delay(5);
   }  
   
 }
@@ -146,7 +146,7 @@ void ExecuteReversing(){
   digitalWrite(IN3, HIGH);
   digitalWrite(IN2, HIGH);
 
-  delay(10);
+  delay(5);
 
   analogWrite(ENA, 255);
   analogWrite(ENB, 120);
