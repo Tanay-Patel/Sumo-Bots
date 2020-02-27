@@ -26,7 +26,7 @@ void setup() {
   int ECHO1 = 13;
   int TRIG1 = 12;
 
-  int IRLIMITS = 760;
+  int IRLIMITS = 100;
  
 void loop() {
   //Setting Pin-Modes
