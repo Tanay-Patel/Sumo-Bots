@@ -26,10 +26,6 @@ void setup() {
   int ECHO1 = 13;
   int TRIG1 = 12;
 
-//Ultra-Sonic Sensor #2 Control
-  int ECHO2 = 8;
-  int TRIG2 = 7;
-
   int IRLIMITS = 760;
  
 void loop() {
@@ -43,8 +39,6 @@ void loop() {
 
   pinMode(ECHO1, INPUT);
   pinMode(TRIG1, OUTPUT);
-  pinMode(ECHO2, INPUT);
-  pinMode(TRIG2, OUTPUT);
 
   pinMode(AO, INPUT);
   pinMode(AONE, INPUT);
@@ -66,39 +60,36 @@ void loop() {
   
   while(true){
     float distance1 = getDistance(ECHO1, TRIG1);
-    float distance2 = getDistance(ECHO2, TRIG2);
     int speed1 = setMotorSpeed(distance1);
-    int speed2 = setMotorSpeed(distance2);
 
     //IR Sensors Input
     int Anal1 = analogRead(AO);
     int Anal2 = analogRead(AONE);
     int Anal3 = analogRead(ATWO);
+    Anal1 = analogRead(AO);
+    Anal2 = analogRead(AONE);
+    Anal3 = analogRead(ATWO);
+    Anal1 = analogRead(AO);
+    Anal2 = analogRead(AONE);
+    Anal3 = analogRead(ATWO);
+
+    Serial.println(Anal1);
       
     //Checks If The Bot Is Inside The Track or lifted up.
     bool OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
     if(OutsideBoundary){
-        //ExecuteReversing();
+        ExecuteReversing();
     }
 
 
     //Checks if bot sees enemy bot.
-    if((distance1 < 15) or (distance2 < 15)){
-      analogWrite(ENA, speed1);
-      analogWrite(ENB, speed2);
-    }
-    else{
-      analogWrite(ENA,255);
-      analogWrite(ENB,175);
-    }
+    analogWrite(ENA, speed1);
+    analogWrite(ENB, speed1);
     
     delay(15);
   }  
   
 }
-
-
-
 
 //Returns Ultra Sonic Sensor reading in CM
 float getDistance(int ECHO, int TRIG){
@@ -127,11 +118,11 @@ float getDistance(int ECHO, int TRIG){
 int setMotorSpeed(float distance){
   int spd = 0;
   
-  if(distance < 15){
+  if(distance < 25){
     spd = 255;
     }
   else{
-    spd = 150;
+    spd = 120;
     }
   return spd;
 }
@@ -160,7 +151,7 @@ void ExecuteReversing(){
   analogWrite(ENA, 255);
   analogWrite(ENB, 120);
 
-  delay(750);
+  delay(1500);
 
   digitalWrite(IN1, HIGH);
   digitalWrite(IN4, HIGH);
