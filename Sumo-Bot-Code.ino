@@ -11,8 +11,8 @@ void setup() {
 }
 
 //H-Bridge Control Pins
-  int IN1 = 7;
-  int IN2 = 8;
+  int IN1 = 6;
+  int IN2 = 7;
   int IN3 = 2;
   int IN4 = 4;
   int ENA = 3;
@@ -20,13 +20,14 @@ void setup() {
   int AO = A0;
   int AONE = A1;
   int ATWO = A2;
-  int DO = 9;
 
 //Ultra-Sonic Sensor #1 Control
-  int ECHO1 = 13;
-  int TRIG1 = 12;
+  int ECHO1 = 11;
+  int TRIG1 = 10;
 
-  int IRLIMITS = 100;
+  int IRLIMITS = 150;
+  int KillDistance = 15;
+  int RegSpd = 120;
  
 void loop() {
   //Setting Pin-Modes
@@ -45,10 +46,10 @@ void loop() {
   pinMode(ATWO, INPUT);
 
   //Inital Robot Motor Movement.
-  digitalWrite(IN1, HIGH);
+  digitalWrite(IN1, LOW);
   digitalWrite(IN4, HIGH);
   digitalWrite(IN3, LOW);
-  digitalWrite(IN2, LOW);
+  digitalWrite(IN2, HIGH);
   
   analogWrite(ENA, 0);
   analogWrite(ENB, 0); 
@@ -72,19 +73,27 @@ void loop() {
     Anal1 = analogRead(AO);
     Anal2 = analogRead(AONE);
     Anal3 = analogRead(ATWO);
-
-    Serial.println(distance1);
       
     //Checks If The Bot Is Inside The Track or lifted up.
-    bool OutsideBoundary = InsideBoundaryLine(Anal1, Anal2, Anal3);
+    bool OutsideBoundary = false;
+    OutsideBoundary = InsideBoundaryLine(Anal1, Anal2);
+    Serial.println(distance1);
+    //Serial.println(Anal2);
     if(OutsideBoundary){
         ExecuteReversing();
+        Serial.println("REEEE");
     }
 
 
     //Checks if bot sees enemy bot.
-    analogWrite(ENA, speed1);
-    analogWrite(ENB, speed1);
+    if(distance1 < KillDistance){
+      analogWrite(ENA, speed1);
+      analogWrite(ENB, speed1);
+    }
+    else{
+      analogWrite(ENA, RegSpd);
+      analogWrite(ENB, RegSpd);
+    }
     
     delay(5);
   }  
@@ -99,9 +108,9 @@ float getDistance(int ECHO, int TRIG){
   
   //Ultra-Sonic Input
   digitalWrite(TRIG, LOW);
-  delay(20);
+  delay(10);
   digitalWrite(TRIG, HIGH);
-  delay(20);
+  delay(10);
   digitalWrite(TRIG, LOW);
 
   float duration = pulseIn(ECHO, HIGH);
@@ -118,20 +127,20 @@ float getDistance(int ECHO, int TRIG){
 int setMotorSpeed(float distance){
   int spd = 0;
   
-  if(distance < 25){
+  if(distance < KillDistance){
     spd = 255;
     }
   else{
-    spd = 120;
+    spd = RegSpd;
     }
   return spd;
 }
 
 
 //Checks IR Sensor
-float InsideBoundaryLine(int Anal1,int Anal2,int Anal3){  
+float InsideBoundaryLine(int Anal1,int Anal2){  
   bool Inside = false;
-  if((Anal1 < IRLIMITS) or (Anal2 < IRLIMITS) or (Anal3 < IRLIMITS)){
+  if((Anal1 > IRLIMITS) or (Anal2 > IRLIMITS)){
      Inside = true;
   }
   return Inside;
@@ -141,20 +150,20 @@ float InsideBoundaryLine(int Anal1,int Anal2,int Anal3){
 
 //Reverseing Manouver
 void ExecuteReversing(){
-  digitalWrite(IN1, LOW);
+  digitalWrite(IN1, HIGH);
   digitalWrite(IN4, LOW);
   digitalWrite(IN3, HIGH);
-  digitalWrite(IN2, HIGH);
+  digitalWrite(IN2, LOW);
 
   delay(5);
 
   analogWrite(ENA, 255);
-  analogWrite(ENB, 120);
+  analogWrite(ENB, 255);
 
-  delay(1500);
+  delay(600);
 
-  digitalWrite(IN1, HIGH);
+  digitalWrite(IN1, LOW);
   digitalWrite(IN4, HIGH);
   digitalWrite(IN3, LOW);
-  digitalWrite(IN2, LOW);
+  digitalWrite(IN2, HIGH);
 }
